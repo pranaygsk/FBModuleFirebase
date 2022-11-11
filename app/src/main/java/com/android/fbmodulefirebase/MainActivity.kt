@@ -93,20 +93,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun check_price(radio1_selected: String, radio2_selected: String): Int {
-        val radio1 = radio1_selected
-        val radio2 = radio2_selected
         val slot1_price = 100
         val slot2_price = 500
         val slot1_tennis_price = 50
         var booking_amount = 0
-        if(radio1 == "Clubhouse" && radio2 == "10AM-4PM"){
+        if(radio1_selected == "Clubhouse" && radio2_selected == "10AM-4PM"){
             booking_amount=slot1_price*6
         }
-        else if (radio1 == "Clubhouse" && radio2 == "4PM-10PM"){
+        else if (radio1_selected == "Clubhouse" && radio2_selected == "4PM-10PM"){
             booking_amount = slot2_price*6
         }
-        else if(radio1 == "Tennis Court" ){
-            booking_amount = slot1_tennis_price*6
+        else if (radio1_selected == "Tennis Court") {
+            booking_amount = slot1_tennis_price * 6
         }
 
         /*
