@@ -12,7 +12,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
+
     private lateinit var binding : ActivityMainBinding
     private lateinit var database: DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,17 +52,15 @@ class MainActivity : AppCompatActivity() {
             datePickerDialog.show()
         }
 
-
-
         binding.bookSlotButton.setOnClickListener {
-            val id: Int = binding.radioGroup.checkedRadioButtonId
-            val id1: Int = binding.radioGroup1.checkedRadioButtonId
-            val dateText = binding.idEditDate.text.toString()
-            validate_and_calculate(id,id1,dateText)
+            validate_and_calculate()
         }
     }
 
-    private fun validate_and_calculate(id: Int, id1: Int, dateText: String){
+    private fun validate_and_calculate(){
+        val id: Int = binding.radioGroup.checkedRadioButtonId
+        val id1: Int = binding.radioGroup1.checkedRadioButtonId
+        val dateText = binding.idEditDate.text.toString()
         if (id != -1 && id1!=-1 && dateText.isNotEmpty()) { // If any radio button checked from radio group
             // Get the instance of radio button using id
             val radio: RadioButton = findViewById(id)
