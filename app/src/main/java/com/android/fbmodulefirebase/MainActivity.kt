@@ -51,47 +51,52 @@ class MainActivity : AppCompatActivity() {
             datePickerDialog.show()
         }
 
+
+
         binding.bookSlotButton.setOnClickListener {
             val id: Int = binding.radioGroup.checkedRadioButtonId
             val id1: Int = binding.radioGroup1.checkedRadioButtonId
             val dateText = binding.idEditDate.text.toString()
-            if (id != -1 && id1!=-1) { // If any radio button checked from radio group
-                // Get the instance of radio button using id
-                val radio: RadioButton = findViewById(id)
-                val radio1: RadioButton = findViewById(id1)
-                val radio_text = radio.text.toString()
-                val radio1_text = radio1.text.toString()
-                val arrayList = ArrayList<String>()
-                val new_price = check_price(radio_text,radio1_text).toString()
-                arrayList.add(radio_text)
-                arrayList.add(dateText)
-                arrayList.add(radio1_text)
-                arrayList.add(new_price)
-
-                database = FirebaseDatabase.getInstance().getReference("Slots")
-                val slotBooking = SlotBooking(arrayList)
-                database.child(radio_text).child(dateText).child(radio1_text).get().addOnSuccessListener {
-                    if(it.exists()){
-                        Toast.makeText(this,"Booking Failed, Already Booked!",Toast.LENGTH_SHORT).show()
-                    }else{
-                        database.child(radio_text).child(dateText).child(radio1_text).setValue(slotBooking).addOnSuccessListener {
-                            Toast.makeText(this,"Booked, Rs."+new_price,Toast.LENGTH_SHORT).show()
-                        }.addOnFailureListener{
-                            Toast.makeText(this,"Failed!",Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-
-            } else {
-                // If no radio button checked in this radio group
-                Toast.makeText(
-                    applicationContext, "On button click :" +
-                            " nothing selected",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            validate_and_calculate(id,id1,dateText)
         }
     }
+
+    private fun validate_and_calculate(id: Int, id1: Int, dateText: String){
+        if (id != -1 && id1!=-1 && dateText.isNotEmpty()) { // If any radio button checked from radio group
+            // Get the instance of radio button using id
+            val radio: RadioButton = findViewById(id)
+            val radio1: RadioButton = findViewById(id1)
+            val radio_text = radio.text.toString()
+            val radio1_text = radio1.text.toString()
+            val arrayList = ArrayList<String>()
+            val new_price = check_price(radio_text,radio1_text).toString()
+            arrayList.add(radio_text)
+            arrayList.add(dateText)
+            arrayList.add(radio1_text)
+            arrayList.add(new_price)
+
+            database = FirebaseDatabase.getInstance().getReference("Slots")
+            val slotBooking = SlotBooking(arrayList)
+            database.child(radio_text).child(dateText).child(radio1_text).get().addOnSuccessListener {
+                if(it.exists()){
+                    Toast.makeText(this,"Booking Failed, Already Booked!",Toast.LENGTH_SHORT).show()
+                }else{
+                    database.child(radio_text).child(dateText).child(radio1_text).setValue(slotBooking).addOnSuccessListener {
+                        Toast.makeText(this,"Booked, Rs."+new_price,Toast.LENGTH_SHORT).show()
+                    }.addOnFailureListener{
+                        Toast.makeText(this,"Failed!",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+        }else {
+            // If no radio button checked in this radio group
+            Toast.makeText(
+                applicationContext, "Please select all the options to continue",
+                Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun check_price(radio1_selected: String, radio2_selected: String): Int {
         val slot1_price = 100
         val slot2_price = 500
